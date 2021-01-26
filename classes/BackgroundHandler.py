@@ -63,7 +63,7 @@ class BackgroundHandler():
         background.blit(play_area, play_area_loc)
 
         # Write something on each background
-        text = self.font.render(play_text, 1, (10, 10, 10))
+        text = self.font.render(play_text, 1, (255, 255, 255))
         textpos = text.get_rect(centerx=background.get_width() / 2)
         textpos.top += 10
         background.blit(text, textpos)

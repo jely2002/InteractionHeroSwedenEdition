@@ -1,5 +1,5 @@
 # General imports
-import pygame, utils, os
+import pygame, utils
 from classes.GameState import GameState
 from classes.Button import Button
 import song_library
@@ -39,6 +39,7 @@ def main():
     clock = pygame.time.Clock()
     startButton = Button(500, 300, 140, 40, ' Börja', game_state.restart, song.get_font_filename(), allsprites, game_state)
     quitButton = Button(500, 350, 140, 40, ' Sluta', quit, song.get_font_filename(), allsprites, game_state)
+    #scorebackButton = Button(500, 300, 140, 40, ' Bakåt', game_state.to_menu)
 
     # Main loop
     going = True
@@ -69,6 +70,11 @@ def main():
                 if event.type == pygame.MOUSEBUTTONDOWN: 
                     startButton.check_click()
                     quitButton.check_click()
+
+       # elif game_state.state == 'score':
+           # for event in eventlist:
+                #if event.type == pygame.MOUSEBUTTONDOWN:
+
 
         # This runs when the users starts a game
         elif game_state.state == 'playing':
