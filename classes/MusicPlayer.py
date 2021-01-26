@@ -3,110 +3,111 @@ import pygame
 import utils
 import os
 
+
 class MusicPlayer():
     def __init__(self, song, game_state_ref):
         self.bpm = song.get_notes_bpm()
         self.game_state = game_state_ref
 
         self.drop_next_note_callback = self.game_state.drop_next_note_sprite
-        
+
         self.maten = {
-            "ACHTSTE": 30/self.bpm,
-            "KWART": 60/self.bpm,
-            "HALVE": 120/self.bpm,
-            "HELE": 240/self.bpm
+            "ACHTSTE": 30 / self.bpm,
+            "KWART": 60 / self.bpm,
+            "HALVE": 120 / self.bpm,
+            "HELE": 240 / self.bpm
         }
 
         # All notes based of the MIDI standard
         self.noten = {
-            "A0":  21,
+            "A0": 21,
             "A0#": 22,
-            "B0":  23,
-            "C1":  24,
+            "B0": 23,
+            "C1": 24,
             "C1#": 25,
-            "D1":  26,
+            "D1": 26,
             "D1#": 27,
-            "E1":  28,
-            "F1":  29,
+            "E1": 28,
+            "F1": 29,
             "F1#": 30,
-            "G1":  31,
+            "G1": 31,
             "G1#": 32,
-            "A1":  33,
+            "A1": 33,
             "A1#": 34,
-            "B1":  35,
-            "C2":  36,
+            "B1": 35,
+            "C2": 36,
             "C2#": 37,
-            "D2":  38,
+            "D2": 38,
             "D2#": 39,
-            "E2":  40,
-            "F2":  41,
+            "E2": 40,
+            "F2": 41,
             "F2#": 42,
-            "G2":  43,
+            "G2": 43,
             "G2#": 44,
-            "A2":  45,
+            "A2": 45,
             "A2#": 46,
-            "B2":  47,
-            "C3":  48,
+            "B2": 47,
+            "C3": 48,
             "C3#": 49,
-            "D3":  50,
+            "D3": 50,
             "D3#": 51,
-            "E3":  52,
-            "F3":  53,
+            "E3": 52,
+            "F3": 53,
             "F3#": 54,
-            "G3":  55,
+            "G3": 55,
             "G3#": 56,
-            "A3":  57,
+            "A3": 57,
             "A3#": 58,
-            "B3":  59,
-            "C4":  60,
+            "B3": 59,
+            "C4": 60,
             "C4#": 61,
-            "D4":  62,
+            "D4": 62,
             "D4#": 63,
-            "E4":  64,
-            "F4":  65,
+            "E4": 64,
+            "F4": 65,
             "F4#": 66,
-            "G4":  67,
+            "G4": 67,
             "G4#": 68,
-            "A4":  69,
+            "A4": 69,
             "A4#": 70,
-            "B4":  71,
-            "C5":  72,
+            "B4": 71,
+            "C5": 72,
             "C5#": 73,
-            "D5":  74,
+            "D5": 74,
             "D5#": 75,
-            "E5":  76,
-            "F5":  77,
+            "E5": 76,
+            "F5": 77,
             "F5#": 78,
-            "G5":  79,
+            "G5": 79,
             "G5#": 80,
-            "A5":  81,
+            "A5": 81,
             "A5#": 82,
-            "B5":  83,
-            "C6":  84,
+            "B5": 83,
+            "C6": 84,
             "C6#": 85,
-            "D6":  86,
+            "D6": 86,
             "D6#": 87,
-            "E6":  88,
-            "F6":  89,
+            "E6": 88,
+            "F6": 89,
             "F6#": 90,
-            "G6":  91,
+            "G6": 91,
             "G6#": 92,
-            "A6":  93,
+            "A6": 93,
             "A6#": 94,
-            "B6":  95,
-            "C7":  96,
+            "B6": 95,
+            "C7": 96,
             "C7#": 97,
-            "D7":  98,
+            "D7": 98,
             "D7#": 99,
-            "E7":  100,
-            "F7":  101,
+            "E7": 100,
+            "F7": 101,
             "F7#": 102,
-            "G7":  103,
+            "G7": 103,
             "G7#": 104,
-            "A7":  105,
+            "A7": 105,
             "A7#": 106,
-            "B7":  107,
-            "C8":  108
+            "B7": 107,
+            "C8": 108
         }
 
         # Start MIDI server
@@ -128,7 +129,7 @@ class MusicPlayer():
             quit()
 
         # Change this in case you want hit notes to make different sounds
-        self.player.set_instrument(10)  
+        self.player.set_instrument(10)
 
         # Load all the notes from the notes file
         self.liedje = self._read_file(song.get_notes_filename())
@@ -149,7 +150,6 @@ class MusicPlayer():
         initial_delay_ms = 1000
         self.next_note_start_time = pygame.time.get_ticks() + initial_delay_ms
 
-
     def restart(self):
         self.note_index = 0
         self.current_note = self.noten[self.liedje[self.note_index][0]]
@@ -159,8 +159,7 @@ class MusicPlayer():
 
         self.first_run = True
         self.song_done = False
-        
-   
+
     def play_note(self, note):
         # This check prevents double hits within 100ms
         if self.time_since_last_hit < pygame.time.get_ticks() - 100:
@@ -169,7 +168,6 @@ class MusicPlayer():
             self.player.note_on(midi_note, 127)
             self.previous_note = midi_note
             self.time_since_last_hit = pygame.time.get_ticks()
-        
 
     def check_for_next_note(self):
         # check if its time to play the next note
@@ -177,7 +175,6 @@ class MusicPlayer():
             # if so, play it and set the next start time
             self.update_current_note()
             self.next_note_start_time = pygame.time.get_ticks() + self.current_maat * 1000
-
 
     def update_current_note(self):
         if self.note_index >= self.song_length - 1:
@@ -195,24 +192,24 @@ class MusicPlayer():
         # at the end play next note
         self.drop_next_note_callback(self.liedje[self.note_index])
 
-
     def update(self):
         if not self.song_done:
             self.check_for_next_note()
 
-
     def set_instrument(self, instrument):
         self.player.set_instrument(instrument)
-
 
     def start_midi_server(self):
         import subprocess, time
         # See if timidity is already running and kill running instances
         result = subprocess.run(['pgrep', 'timidity'], stdout=subprocess.PIPE)
-        if len(result.stdout) > 1:
-            for result in result.stdout.splitlines():
-                print(result)
-                subprocess.run(['kill', result])
+        if len(result.stdout) > 0:
+            split = result.stdout.splitlines()
+            print(split)
+            if len(split) > 1:
+                for result in result.stdout.splitlines():
+                    print(result)
+                    subprocess.run(['kill', result])
             return
         print('Killing al running instances of timidity...')
         time.sleep(1)
@@ -220,7 +217,6 @@ class MusicPlayer():
         os.system('timidity -iA &')
         time.sleep(1)
         return
-
 
     def _read_file(self, filename):
         liedje = None
@@ -234,6 +230,6 @@ class MusicPlayer():
         teller = 0
         for i in liedje:
             liedje[teller] = i.split(" ")
-            teller+=1
+            teller += 1
 
         return liedje
