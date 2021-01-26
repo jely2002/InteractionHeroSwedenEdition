@@ -116,6 +116,17 @@ class MusicPlayer():
         # Pygame MIDI init
         pygame.midi.init()
 
+        default_output_id = pygame.midi.get_default_output_id()
+        if default_output_id != -1:
+            if utils.is_running_on_rpi():
+                # Setting output on 2 on RPi is required for using Timidity
+                self.player = pygame.midi.Output(2)
+            else:
+                self.player = pygame.midi.Output(default_output_id)
+        else:
+            print('No audio devices found! Closing program...')
+            quit()
+
         # Change this in case you want hit notes to make different sounds
         self.player.set_instrument(10)  
 
@@ -203,7 +214,7 @@ class MusicPlayer():
                 print(result)
                 subprocess.run(['kill', result])
             return
-        print('Killing al but 1 running instances of timidity...')
+        print('Killing al running instances of timidity...')
         time.sleep(1)
         print('Starting timidity...')
         os.system('timidity -iA &')
