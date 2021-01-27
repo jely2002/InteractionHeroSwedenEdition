@@ -28,14 +28,10 @@ def main():
     # Checks if the program is running on a Raspberry Pi
     is_running_on_rpi = utils.is_running_on_rpi()
     if is_running_on_rpi:
-        # Below are some pin input numbers, feel free to change them. However,
-        # !!! ALWAYS READ THE PIN DOCUMENTATION CAREFULLY !!!
-        # Pay special attention to the difference between GPIO pin numbers and BOARD pin numbers
-        # For example GPIO17 is addressed 17 rather than 11 (See pin numbering diagram.)
-        # https://gpiozero.readthedocs.io/en/stable/recipes.html#pin-numbering
-        gpio_pin_numbers = [22, 23, 24, 27]  # Max 4 pins
-        gpio_buttons = init_rpi_buttons(gpio_pin_numbers)
-        game_state.add_gpio_pins(gpio_pin_numbers)
+        from classes.TouchButtons import TouchButtons
+        touch_pin_numbers = [1, 2, 3, 4]  # Max 4 pins
+        touchButtons = TouchButtons(1, 0x57)
+        game_state.add_touch_pins(touch_pin_numbers)
 
     # Prepare game objects
     clock = pygame.time.Clock()
@@ -99,14 +95,12 @@ def main():
 
                 # When on RPi also check for GPIO input
                 if is_running_on_rpi:
-                    for button in gpio_buttons:
-                        # When a buttons is pressed in this loop and wasn't pressed in the last loop
-                        if button.is_pressed() and button.gpio_key is hitbox.gpio_event_key and button.is_available():
-                            button.use()  # Set the button as unavailable for the next loop
+                    for button in touch_pin_numbers:
+                        if touchButtons.is_pressed(button) and button == hitbox.touch_event_key and touchButtons.is_available():
+                            touchButtons.use()  # Set the button as unavailable for the next loop
                             game_state.check_for_hit(hitbox)
-                        # When a button was not pressed in this loop
-                        elif not button.is_pressed():
-                            button.wake()  # Set the button as available again
+                        elif not touchButtons.is_pressed(button):
+                            touchButtons.wake()  # Set the button as available again
                             hitbox.unpunch()
 
         # This calls the update() function on all sprites
@@ -116,28 +110,6 @@ def main():
         screen.blit(game_state.get_background(), (0, 0))  # First draw a new background
         allsprites.draw(screen)  # Next draw all updated sprites
         pygame.display.update()  # Finally render everything to the display
-
-
-def init_rpi_buttons(gpio_pin_numbers):
-    # Initialize Raspberry Pi input pins
-
-    gpio_buttons = []
-
-    from gpiozero import Button
-    from classes.GpioButton import GpioButton
-
-    # Here you can configure which pins you use on your Raspberry Pi
-    gpio_pins = gpio_pin_numbers  # Max 4 pins 
-    bounce_time_in_sec = 0.1
-
-    gpio_buttons.append(GpioButton(Button(gpio_pins[0], bounce_time=bounce_time_in_sec)))
-    gpio_buttons.append(GpioButton(Button(gpio_pins[1], bounce_time=bounce_time_in_sec)))
-    gpio_buttons.append(GpioButton(Button(gpio_pins[2], bounce_time=bounce_time_in_sec)))
-    gpio_buttons.append(GpioButton(Button(gpio_pins[3], bounce_time=bounce_time_in_sec)))
-
-    print('The following pins are configured as (gpio) button inputs:', gpio_pins)
-
-    return gpio_buttons
 
 
 if __name__ == "__main__":

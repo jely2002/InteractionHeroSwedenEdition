@@ -1,5 +1,5 @@
 from utils import load_sound, load_font
-from classes.GpioButton import GpioButton
+from classes.TouchButtons import GpioButton
 from classes.Hitbox import Hitbox
 from classes.ScoreHandler import ScoreHandler
 from classes.BackgroundHandler import BackgroundHandler
@@ -101,6 +101,6 @@ class GameState():
             self.sounds_miss.play()
             self.scoreHandler.change_score(-5)
 
-    def add_gpio_pins(self, gpio_pins):
+    def add_touch_pins(self, touch_pins):
         for i in range(4):
-            self.hitboxes[i].gpio_event_key = gpio_pins[i]
+            self.hitboxes[i].touch_event_key = touch_pins[i]

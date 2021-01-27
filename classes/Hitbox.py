@@ -12,7 +12,7 @@ class Hitbox(pygame.sprite.Sprite):
 
         # The key the hitbox is registered to
         self.event_key = event_key
-        self.gpio_event_key = None
+        self.touch_event_key = None
 
         # Which lane this hitbox is drawn in
         self.lane_index = lane_index
