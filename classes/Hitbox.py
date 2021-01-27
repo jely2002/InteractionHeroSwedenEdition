@@ -49,7 +49,8 @@ class Hitbox(pygame.sprite.Sprite):
             self.is_hitting = 1
             for note in self.notes:
                 if self.rect.colliderect(note.rect):
-                    note.hit()
+                    if not note.shrinking:
+                        note.hit()
                     return True
 
 

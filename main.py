@@ -18,9 +18,9 @@ def main():
     allsprites = pygame.sprite.Group()
 
     # Song to be used in game. Only one can be used.
-    song = song_library.example_song_short  # Short random song for debugging
+    #song = song_library.example_song_short  # Short random song for debugging
     #song = song_library.example_song_long  # Ode To Joy
-    #song = song_library.du_gamla_du_fria
+    song = song_library.du_gamla_du_fria
 
     # Create game_state instance, this holds all required game info
     game_state = GameState(allsprites, song)
@@ -97,11 +97,14 @@ def main():
                 if is_running_on_rpi:
                     for button in touch_pin_numbers:
                         if touchButtons.is_pressed(button) and button == hitbox.touch_event_key and touchButtons.is_available():
-                            touchButtons.use()  # Set the button as unavailable for the next loop
-                            game_state.check_for_hit(hitbox)
+                            touchButtons.use()
+                            if not touchButtons.is_cooldown(button):
+                                touchButtons.set_cooldown(True, button)
+                                game_state.check_for_hit(hitbox)
                         elif not touchButtons.is_pressed(button):
-                            touchButtons.wake()  # Set the button as available again
-                            hitbox.unpunch()
+                            if touchButtons.is_cooldown(button):
+                                hitbox.unpunch()
+                            touchButtons.wake()    
 
         # This calls the update() function on all sprites
         allsprites.update()
