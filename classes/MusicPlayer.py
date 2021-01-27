@@ -129,7 +129,7 @@ class MusicPlayer():
             quit()
 
         # Change this in case you want hit notes to make different sounds
-        self.player.set_instrument(10)
+        self.player.set_instrument(2)
 
         # Load all the notes from the notes file
         self.liedje = self._read_file(song.get_notes_filename())
@@ -147,7 +147,7 @@ class MusicPlayer():
         self.song_done = False
 
         # Set the next start a few moments later so the notes can drop
-        initial_delay_ms = 1000
+        initial_delay_ms = 3000
         self.next_note_start_time = pygame.time.get_ticks() + initial_delay_ms
 
     def restart(self):

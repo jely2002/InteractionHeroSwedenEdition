@@ -2,12 +2,16 @@ from pygame import sprite, font
 from utils import load_font
 
 class ScoreHandler(sprite.Sprite):
-    def __init__(self, allsprites, game_state, song):
+    def __init__(self, allsprites, game_state, song, background_handler):
         sprite.Sprite.__init__(self, allsprites)
         self.game_state = game_state
+        self.background_handler = background_handler
         self.font = load_font(song.get_font_filename(), 36)
 
         self.score = 0
+        self.show_highscore = False
+
+        self.enabled = True
 
         # Feel free to play around with these variables
         # Currently they are not used anywhere in the code
@@ -20,11 +24,10 @@ class ScoreHandler(sprite.Sprite):
         # Flag to see when a score should be saved after an update
         self.score_is_saved = True
 
-        # Required Sprite attributes
-        self.image = self.font.render('', 1, (10, 10, 10))
-        self.pos = (590, 50)  # Set the location of the text
+        self.image = self.font.render('Score: ' + str(self.score), 1, (255, 255, 255))
+        self.pos = (1100, 650)  # Set the location of the text
+        self.score_text = None
         self.rect = (self.pos, self.image.get_size())
-
 
     def restart(self):
         self.score = 0
@@ -32,22 +35,23 @@ class ScoreHandler(sprite.Sprite):
         self.score_multiplier = 1
         self.score_is_saved = False
 
-
-    def get_score_text_to_blit(self):
-        self.score_text = self.font.render('Score: ' + str(self.score), 1, (10, 10, 10))
-        return self.score_text, self.score_text_pos
-
     # This is called every frame
     def update(self):
         if self.game_state.state == 'playing':
-            # print('Current score: ' + str(self.score))
-            pass
-        elif self.played_once == True:
-            # print('Your final score: ' + str(self.score))
-            pass
-
+            self.image = self.get_score_text_to_blit()
+            self.show()
+        elif self.game_state.state == 'prestart':
+            self.hide()
+        elif self.game_state.state == 'score':
+            self.image = self.font.render("Last score: " + str(self.score), 1, (255, 255, 255))
+            self.hide()
+            self.show((self.background_handler.background.get_width() / 2 - self.image.get_width() / 2, 270))
         if not self.game_state.state == 'playing' and not self.score_is_saved:
             self.save_score()
+
+    def get_score_text_to_blit(self):
+        self.score_text = self.font.render('Score: ' + str(self.score), 1, (255, 255, 255))
+        return self.score_text
 
     def change_score(self, score_difference):
         self.score += score_difference
@@ -63,8 +67,14 @@ class ScoreHandler(sprite.Sprite):
                 songscore = int(songdata[1])
                 if songname == played_song and (best_score == None or songscore > best_score):
                     best_score = songscore
-        return best_score
-    
+        return str(best_score)
+
+    def get_last_score(self):
+        with open('scores.txt', 'r') as f:
+            lines = f.read().splitlines()
+            last_line = lines[-1]
+            return last_line.split(" ")[1]
+
     def save_score(self):
         self.score_is_saved = True
         self.played_once = True
@@ -73,3 +83,15 @@ class ScoreHandler(sprite.Sprite):
             f.write(text)
         print('The highscore is', self.get_high_score(), '- See ScoreHandler.py for new implementation')
         print('Your score is', self.score, '- See ScoreHandler.py for new implementation')
+
+    def hide(self):
+        if self.enabled:
+            self.rect = ((-500, -500), self.image.get_size())
+            self.enabled = False
+
+    def show(self, pos=None):
+        if pos is None:
+            pos = self.pos
+        if not self.enabled:
+            self.rect = (pos, self.image.get_size())
+            self.enabled = True

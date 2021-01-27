@@ -1,15 +1,18 @@
 import pygame
 from utils import load_font
 
+
 class Button(pygame.sprite.Sprite):
-    def __init__(self, x, y, width, height, text, function, font_filename, allsprites, game_state):
+    def __init__(self, x, y, width, height, text, function, type, font_filename, allsprites, game_state):
         pygame.sprite.Sprite.__init__(self, allsprites)
         self.game_state = game_state
         self.allsprites = allsprites
         self.x = x
         self.y = y
+        self.enabled = True
         self.width = width
         self.height = height
+        self.type = type
         self.onclick_function = function
         self.color_text = (255,255,255)
         self.dark_bg_rgb = (4,2,3, 170)
@@ -36,19 +39,35 @@ class Button(pygame.sprite.Sprite):
     
     def update(self):
         if self.game_state.state == 'prestart':
-            self.rect = (self.pos, (self.width, self.height))
-            if self._mouse_hover():
-                self.image = self.light_button
+            if self.type != "menu":
+                self.hide()
             else:
-                self.image = self.dark_button
+                self.show()
+                if self._mouse_hover():
+                    self.image = self.light_button
+                else:
+                    self.image = self.dark_button
         elif self.game_state.state == 'playing':
-            self.rect = ((-500, -500), (self.width, self.height))
+            self.hide()
+        elif self.game_state.state == 'score':
+            if self.type != "score":
+                self.hide()
+            else:
+                self.show()
 
+    def hide(self):
+        if self.enabled:
+            self.rect = ((-500, -500), (self.width, self.height))
+            self.enabled = False
+
+    def show(self):
+        if not self.enabled:
+            self.rect = (self.pos, (self.width, self.height))
+            self.enabled = True
 
     def _mouse_hover(self):
         mouse = pygame.mouse.get_pos()
         return (mouse[0] >= self.x and mouse[0] <= self.x + self.width and mouse[1] >= self.y and mouse[1] <= self.y + self.height)
-        
 
     def check_click(self):
         if self._mouse_hover():

@@ -32,11 +32,11 @@ class GameState():
         self.note_dropper = NoteDropper(self.music_player)
 
         # Responsible for managing (high) scores
-        self.scoreHandler = ScoreHandler(self.allsprites,self, self.song) 
+        self.scoreHandler = ScoreHandler(self.allsprites, self, self.song, self.background_handler)
 
         # Load sound which plays when a note is missed
         self.sounds_miss = load_sound(song.get_sound_miss())
-        
+
         # Define Hitboxes
         input_keys = ['a', 's', 'd', 'f']
         self.hitboxes = [
@@ -46,7 +46,6 @@ class GameState():
             Hitbox('helm.png', 3, input_keys[3], self.allsprites),
         ]
 
-
     def restart(self):
         self.state = 'playing'
         self.notes_are_dropping = False
@@ -54,20 +53,16 @@ class GameState():
         self.scoreHandler.restart()
         self.music_player.restart()
 
-
     def drop_next_note_sprite(self, note):
         self.note_dropper.drop(note, self.hitboxes)
 
-
     def get_background(self):
         return self.background_handler.background
-
 
     def end_song(self):
         self.wait_untill_notes_gone = time.get_ticks() + 2000
         self.song_is_finished = True
         self.notes_are_dropping = True
-
 
     def update(self):
         self.background_handler.update_background()
@@ -75,7 +70,7 @@ class GameState():
         if self.state == 'playing':
             # When the song is done and there are no more notes dropping: go to menu
             if self.song_is_finished and not self.notes_are_dropping:
-                self.state = 'prestart'
+                self.state = 'score'
             # When the song is done and there are notes dropping: wait
             elif self.song_is_finished and self.notes_are_dropping:
                 # After some time assume no more notes are dropping
@@ -92,6 +87,12 @@ class GameState():
         elif self.state == 'score':
             return
 
+    def open_score_menu(self):
+
+        self.state = 'score'
+
+    def open_menu(self):
+        self.state = 'prestart'
 
     def check_for_hit(self, hitbox):
         if hitbox.hits():
@@ -99,7 +100,6 @@ class GameState():
         else:
             self.sounds_miss.play()
             self.scoreHandler.change_score(-5)
-
 
     def add_gpio_pins(self, gpio_pins):
         for i in range(4):

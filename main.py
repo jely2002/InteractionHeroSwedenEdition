@@ -3,6 +3,7 @@ import pygame, utils
 from classes.GameState import GameState
 from classes.Button import Button
 import song_library
+from classes.Label import Label
 
 
 def main():
@@ -11,14 +12,15 @@ def main():
     # Set screen size. Don't change this unless you know what you are doing!
     screen = pygame.display.set_mode((1280, 720))
     # Set the window title
-    pygame.display.set_caption("IAT Challengeweek: Interaction Hero")
+    pygame.display.set_caption("Sweden - Interaction Hero")
 
     # Keeps track of all sprites to be updated every frame
     allsprites = pygame.sprite.Group()
 
     # Song to be used in game. Only one can be used.
-    song = song_library.du_gamla_du_fria # Short random song for debugging
-    # song = song_library.example_song_long  # Ode To Joy
+    song = song_library.example_song_short  # Short random song for debugging
+    #song = song_library.example_song_long  # Ode To Joy
+    #song = song_library.du_gamla_du_fria
 
     # Create game_state instance, this holds all required game info
     game_state = GameState(allsprites, song)
@@ -37,9 +39,11 @@ def main():
 
     # Prepare game objects
     clock = pygame.time.Clock()
-    startButton = Button(500, 300, 140, 40, ' Börja', game_state.restart, song.get_font_filename(), allsprites, game_state)
-    quitButton = Button(500, 350, 140, 40, ' Sluta', quit, song.get_font_filename(), allsprites, game_state)
-    #scorebackButton = Button(500, 300, 140, 40, ' Bakåt', game_state.to_menu)
+    startButton = Button(570, 200, 140, 40, ' Börja', game_state.restart, "menu", song.get_font_filename(), allsprites, game_state)
+    quitButton = Button(570, 300, 140, 40, ' Sluta', quit, "menu", song.get_font_filename(), allsprites, game_state)
+    scoreButton = Button(570, 250, 140, 40, ' Score', game_state.open_score_menu, "menu", song.get_font_filename(), allsprites, game_state)
+    scoreBackButton = Button(570, 350, 140, 40, ' Bakåt', game_state.open_menu, "score", song.get_font_filename(), allsprites, game_state)
+    highscoreLabel = Label("", 100, 220, True, 36, song.get_font_filename(), (255,255,255), "score", allsprites, game_state)
 
     # Main loop
     going = True
@@ -66,14 +70,17 @@ def main():
         # This runs before the user starts the game
         if game_state.state == 'prestart':
             for event in eventlist:
-            # Checks if a mouse is clicked 
-                if event.type == pygame.MOUSEBUTTONDOWN: 
+                # Checks if a mouse is clicked
+                if event.type == pygame.MOUSEBUTTONDOWN:
                     startButton.check_click()
                     quitButton.check_click()
+                    scoreButton.check_click()
 
-       # elif game_state.state == 'score':
-           # for event in eventlist:
-                #if event.type == pygame.MOUSEBUTTONDOWN:
+        elif game_state.state == 'score':
+            highscoreLabel.text = "Highscore: " + str(game_state.scoreHandler.get_high_score())
+            for event in eventlist:
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    scoreBackButton.check_click()
 
 
         # This runs when the users starts a game
@@ -87,11 +94,9 @@ def main():
                     elif event.type == pygame.KEYUP:
                         hitbox.unpunch()
                     elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                        print("press")
                         game_state.state = 'prestart'
                         hitbox.destroy_all_notes()
 
-                        
                 # When on RPi also check for GPIO input
                 if is_running_on_rpi:
                     for button in gpio_buttons:
@@ -106,7 +111,7 @@ def main():
 
         # This calls the update() function on all sprites
         allsprites.update()
-        
+
         # Draw Everything
         screen.blit(game_state.get_background(), (0, 0))  # First draw a new background
         allsprites.draw(screen)  # Next draw all updated sprites
@@ -115,9 +120,9 @@ def main():
 
 def init_rpi_buttons(gpio_pin_numbers):
     # Initialize Raspberry Pi input pins
-    
+
     gpio_buttons = []
-    
+
     from gpiozero import Button
     from classes.GpioButton import GpioButton
 
