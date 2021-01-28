@@ -22,11 +22,13 @@ def main():
     #song = song_library.example_song_long  # Ode To Joy
     song = song_library.du_gamla_du_fria
 
-    # Create game_state instance, this holds all required game info
-    game_state = GameState(allsprites, song)
-
     # Checks if the program is running on a Raspberry Pi
     is_running_on_rpi = utils.is_running_on_rpi()
+
+    # Create game_state instance, this holds all required game info
+    game_state = GameState(allsprites, song, is_running_on_rpi)
+
+
     if is_running_on_rpi:
         from classes.TouchButtons import TouchButtons
         touch_pin_numbers = [1, 2, 3, 4]  # Max 4 pins

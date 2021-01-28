@@ -10,8 +10,10 @@ import datetime
 
 class GameState():
 
-    def __init__(self, allsprites, song):
+    def __init__(self, allsprites, song, pi):
         self.state = 'prestart'
+
+        self.pi = pi
 
         self.allsprites = allsprites
         self.keyboard_button = []
@@ -30,6 +32,8 @@ class GameState():
 
         # Assigns falling notes to correct hitbox
         self.note_dropper = NoteDropper(self.music_player)
+
+        self.buzzer = None
 
         # Responsible for managing (high) scores
         self.scoreHandler = ScoreHandler(self.allsprites, self, self.song, self.background_handler)
@@ -98,8 +102,17 @@ class GameState():
         if hitbox.hits():
             self.scoreHandler.change_score(10)
         else:
-            self.sounds_miss.play()
+            self.buzz()
             self.scoreHandler.change_score(-5)
+
+    def buzz(self):
+        if self.pi:
+            from gpiozero import Buzzer
+            self.buzzer = Buzzer(21)
+            self.buzzer.beep()
+        else:
+            self.sounds_miss.play()
+
 
     def add_touch_pins(self, touch_pins):
         for i in range(4):
