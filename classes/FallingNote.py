@@ -11,7 +11,7 @@ class FallingNote(pygame.sprite.Sprite):
         self.note = note
         
         self.lane_index = lane_i
-        self.image, self.rect = load_image("meatball-hitbox.png", (0, 255, 0))
+        self.image, self.rect = load_image("meatball-hitbox.png")
         screen = pygame.display.get_surface()
         self.area = screen.get_rect()  # ONLY USE THIS TO CHECK IT HAS FALLEN OF SCREEN
         self.rect.topleft = self._new_start_pos()

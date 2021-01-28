@@ -18,7 +18,7 @@ class Hitbox(pygame.sprite.Sprite):
         self.lane_index = lane_index
 
         # Setup the required Sprite attributes (image and rect)
-        self.image, self.rect = load_image(image_name, (0, 255, 0))
+        self.image, self.rect = load_image(image_name)
         self.image = pygame.transform.scale(self.image, (110, 125))
         self.rect = self.image.get_rect()
         self.rect.bottomleft = ((420 + 110 * self.lane_index), 720)
