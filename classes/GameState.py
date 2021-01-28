@@ -111,7 +111,7 @@ class GameState():
 
     def buzz(self):
         if self.pi:
-            self.buzzer.beep()
+            self.buzzer.beep(on_time=0.5, off_time=0.5, n=1)
         else:
             self.sounds_miss.play()
 
