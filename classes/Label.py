@@ -29,13 +29,20 @@ class Label(pygame.sprite.Sprite):
 
     def update(self):
         self.image = self.font.render(self.text, 1, self.color)
+        #print(self.text)
         self.check_pos()
         if self.game_state.state == 'prestart':
             self.hide()
         elif self.game_state.state == 'playing':
-            self.hide()
+            if self.type == "playing":
+                self.show()
+            else:
+                self.hide()
         elif self.game_state.state == 'score':
-            self.show()
+            if self.type == 'score':
+                self.show()
+            else:
+                self.hide()
 
     def check_pos(self):
         if self.enabled:

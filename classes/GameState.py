@@ -22,11 +22,11 @@ class GameState():
         self.notes_are_dropping = False
         self.song_is_finished = False
 
-        # Reads and plays audio from notes files
-        self.music_player = MusicPlayer(song, self)
-
         # Responsible for loading and animating the background
         self.background_handler = BackgroundHandler(song)
+
+        # Reads and plays audio from notes files
+        self.music_player = MusicPlayer(song, self)
 
         # Assigns falling notes to correct hitbox
         self.note_dropper = NoteDropper(self.music_player)

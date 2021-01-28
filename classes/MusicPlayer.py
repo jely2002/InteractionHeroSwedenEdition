@@ -2,6 +2,9 @@ import pygame.midi
 import pygame
 import utils
 import os
+import math
+import datetime
+from classes.Label import Label
 
 
 class MusicPlayer():
@@ -10,6 +13,8 @@ class MusicPlayer():
         self.game_state = game_state_ref
 
         self.drop_next_note_callback = self.game_state.drop_next_note_sprite
+
+        self.countdown_label = Label("", 360, 300, True, 60, self.game_state.song.get_font_filename(), (255, 255, 255), "playing", self.game_state.allsprites, self.game_state)
 
         self.maten = {
             "ACHTSTE": 30 / self.bpm,
@@ -142,13 +147,14 @@ class MusicPlayer():
         self.current_maat = self.maten[self.liedje[self.note_index][1]]
         self.previous_note = 0
         self.time_since_last_hit = 0
-
+        self.countdown_state = 0
+        self.start_time = None
         self.first_run = True
         self.song_done = False
 
         # Set the next start a few moments later so the notes can drop
-        initial_delay_ms = 3000
-        self.next_note_start_time = pygame.time.get_ticks() + initial_delay_ms
+        self.initial_delay_ms = 3000
+        self.next_note_start_time = pygame.time.get_ticks() + self.initial_delay_ms
 
     def restart(self):
         self.note_index = 0
@@ -156,6 +162,9 @@ class MusicPlayer():
         self.current_maat = self.maten[self.liedje[self.note_index][1]]
         self.previous_note = 0
         self.time_since_last_hit = 0
+        self.countdown_state = 0
+        self.start_time = None
+        self.next_note_start_time = pygame.time.get_ticks() + self.initial_delay_ms
 
         self.first_run = True
         self.song_done = False
@@ -170,7 +179,16 @@ class MusicPlayer():
             self.time_since_last_hit = pygame.time.get_ticks()
 
     def check_for_next_note(self):
+        if self.start_time is None:
+            self.start_time = datetime.datetime.now()
         # check if its time to play the next note
+        if math.isclose((datetime.datetime.now() - self.start_time).total_seconds(), self.countdown_state, rel_tol=0.1) and self.countdown_state <= 3:
+            print(self.countdown_state)
+            if self.countdown_state == 3:
+                self.countdown_label.text = ""
+            else:
+                self.countdown_label.text = str(3 - self.countdown_state)
+            self.countdown_state += 1
         if pygame.time.get_ticks() > self.next_note_start_time:
             # if so, play it and set the next start time
             self.update_current_note()
