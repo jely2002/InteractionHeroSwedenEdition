@@ -3,7 +3,7 @@ from utils import load_font
 
 
 class Button(pygame.sprite.Sprite):
-    def __init__(self, x, y, width, height, text, function, type, font_filename, allsprites, game_state):
+    def __init__(self, x, y, width, height, text, function, type, font_filename, allsprites, game_state, click_arg=None):
         pygame.sprite.Sprite.__init__(self, allsprites)
         self.game_state = game_state
         self.allsprites = allsprites
@@ -17,20 +17,21 @@ class Button(pygame.sprite.Sprite):
         self.color_text = (255,255,255)
         self.dark_bg_rgb = (4,2,3, 170)
         self.light_bg_rgb = (4,2,3, 170)
-        self.font = load_font(font_filename, 30)
+        self.font = load_font(font_filename, 26)
+        self.click_arg = click_arg
 
         self.text = self.font.render(text, True, self.color_text)
 
         dark_button = pygame.Surface((self.width, self.height), pygame.SRCALPHA, 32)
         dark_button = dark_button.convert_alpha()
         dark_button.fill(self.dark_bg_rgb)
-        dark_button.blit(self.text, (22, -2))
+        dark_button.blit(self.text, (22, -1))
         self.dark_button = dark_button
 
         light_button = pygame.Surface((self.width, self.height), pygame.SRCALPHA, 32)
         light_button = light_button.convert_alpha()
         light_button.fill(self.light_bg_rgb)
-        light_button.blit(self.text, (21, -1))
+        light_button.blit(self.text, (21, 0))
         self.light_button = light_button
 
         self.image = self.dark_button
@@ -54,6 +55,11 @@ class Button(pygame.sprite.Sprite):
                 self.hide()
             else:
                 self.show()
+        elif self.game_state.state == 'difficulty':
+            if self.type != 'difficulty':
+                self.hide()
+            else:
+                self.show()
 
     def hide(self):
         if self.enabled:
@@ -71,4 +77,7 @@ class Button(pygame.sprite.Sprite):
 
     def check_click(self):
         if self._mouse_hover():
-            self.onclick_function()
+            if self.click_arg is None:
+                self.onclick_function()
+            else:
+                self.onclick_function(self.click_arg)

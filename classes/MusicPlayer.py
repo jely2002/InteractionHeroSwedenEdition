@@ -158,7 +158,7 @@ class MusicPlayer():
         self.remote_sound = RemoteSound("192.168.1.76", "8765")
 
         # Set the next start a few moments later so the notes can drop
-        self.initial_delay_ms = 3000
+        self.initial_delay_ms = 2500
         self.next_note_start_time = pygame.time.get_ticks() + self.initial_delay_ms
 
     def restart(self):
@@ -190,7 +190,7 @@ class MusicPlayer():
         if self.start_time is None:
             self.start_time = datetime.datetime.now()
         # check if its time to play the next note
-        if math.isclose((datetime.datetime.now() - self.start_time).total_seconds(), self.countdown_state, rel_tol=0.1) and self.countdown_state <= 3:
+        if math.isclose((datetime.datetime.now() - self.start_time).total_seconds(), self.countdown_state, rel_tol=0.3) and self.countdown_state <= 3:
             print(self.countdown_state)
             if self.countdown_state == 3:
                 self.countdown_label.text = ""

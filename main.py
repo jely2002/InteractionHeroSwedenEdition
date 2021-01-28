@@ -37,7 +37,10 @@ def main():
 
     # Prepare game objects
     clock = pygame.time.Clock()
-    startButton = Button(570, 200, 140, 40, ' Börja', game_state.restart, "menu", song.get_font_filename(), allsprites, game_state)
+    startButton = Button(570, 200, 140, 40, ' Börja', game_state.open_difficulty_menu, "menu", song.get_font_filename(), allsprites, game_state)
+    easyButton = Button(570, 200, 140, 40, ' Bekväm', game_state.restart, "difficulty", song.get_font_filename(), allsprites, game_state, click_arg=0)
+    normalButton = Button(570, 250, 140, 40, ' Vanligt', game_state.restart, "difficulty", song.get_font_filename(), allsprites, game_state, click_arg=1)
+    hardButton = Button(570, 300, 140, 40, ' Svår', game_state.restart, "difficulty", song.get_font_filename(), allsprites, game_state, click_arg=2)
     quitButton = Button(570, 300, 140, 40, ' Sluta', quit, "menu", song.get_font_filename(), allsprites, game_state)
     scoreButton = Button(570, 250, 140, 40, ' Score', game_state.open_score_menu, "menu", song.get_font_filename(), allsprites, game_state)
     scoreBackButton = Button(570, 350, 140, 40, ' Bakåt', game_state.open_menu, "score", song.get_font_filename(), allsprites, game_state)
@@ -73,6 +76,13 @@ def main():
                     startButton.check_click()
                     quitButton.check_click()
                     scoreButton.check_click()
+
+        elif game_state.state == 'difficulty':
+            for event in eventlist:
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    easyButton.check_click()
+                    normalButton.check_click()
+                    hardButton.check_click()
 
         elif game_state.state == 'score':
             highscoreLabel.text = "Highscore: " + str(game_state.scoreHandler.get_high_score())

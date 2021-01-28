@@ -24,11 +24,12 @@ class GameState():
         self.notes_are_dropping = False
         self.song_is_finished = False
 
+        self.difficulty = 1
+
         # Responsible for loading and animating the background
         self.background_handler = BackgroundHandler(song)
 
-        # Reads and plays audio from notes files
-        self.music_player = MusicPlayer(song, self)
+        self.music_player = MusicPlayer(self.song, self)
 
         # Assigns falling notes to correct hitbox
         self.note_dropper = NoteDropper(self.music_player)
@@ -54,15 +55,16 @@ class GameState():
             Hitbox('helm.png', 3, input_keys[3], self.allsprites),
         ]
 
-    def restart(self):
+    def restart(self, difficulty):
         self.state = 'playing'
         self.notes_are_dropping = False
         self.song_is_finished = False
         self.scoreHandler.restart()
+        self.difficulty = difficulty
         self.music_player.restart()
 
     def drop_next_note_sprite(self, note):
-        self.note_dropper.drop(note, self.hitboxes)
+        self.note_dropper.drop(note, self.hitboxes, self.difficulty)
 
     def get_background(self):
         return self.background_handler.background
@@ -95,12 +97,18 @@ class GameState():
         elif self.state == 'score':
             return
 
+        elif self.state == 'difficulty':
+            return
+
     def open_score_menu(self):
 
         self.state = 'score'
 
     def open_menu(self):
         self.state = 'prestart'
+
+    def open_difficulty_menu(self):
+        self.state = 'difficulty'
 
     def check_for_hit(self, hitbox):
         if hitbox.hits():

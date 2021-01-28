@@ -4,7 +4,7 @@ from utils import load_image
 from math import floor
 
 class FallingNote(pygame.sprite.Sprite):
-    def __init__(self, lane_i, allsprites, music_player_ref, note):
+    def __init__(self, lane_i, allsprites, music_player_ref, difficulty, note):
         pygame.sprite.Sprite.__init__(self, allsprites)  # call Sprite intializer
         self.allsprites = allsprites
         self.music_player_ref = music_player_ref
@@ -15,7 +15,12 @@ class FallingNote(pygame.sprite.Sprite):
         screen = pygame.display.get_surface()
         self.area = screen.get_rect()  # ONLY USE THIS TO CHECK IT HAS FALLEN OF SCREEN
         self.rect.topleft = self._new_start_pos()
-        self.move = 10 # this defines it's falling speed
+        if difficulty == 0:
+            self.move = 5
+        elif difficulty == 1:
+            self.move = 10
+        elif difficulty == 2:
+            self.move = 20
         self.shrinking = 0
         self.destroyed = False
         self.is_hit = False

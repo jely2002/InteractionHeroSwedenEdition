@@ -31,7 +31,7 @@ class ScoreHandler(sprite.Sprite):
         self.score_text = None
         self.rect = (self.pos, self.image.get_size())
 
-        self.streak_label = Label(f"Streak: 0", 1050, 600, False, 36, song.get_font_filename(), (255, 255, 255),
+        self.streak_label = Label("", 1050, 600, False, 36, song.get_font_filename(), (255, 255, 255),
                                   "playing", allsprites, game_state)
 
     def restart(self):
@@ -42,11 +42,18 @@ class ScoreHandler(sprite.Sprite):
     # This is called every frame
     def update(self):
         if self.game_state.state == 'playing':
+            self.streak_label.text = f"Streak: {str(self.score_streak)}"
             self.image = self.get_score_text_to_blit()
             self.show()
         elif self.game_state.state == 'prestart':
+            self.streak_label.text = ""
+            self.hide()
+        elif self.game_state.state == 'difficulty':
+            self.streak_label.text = ""
             self.hide()
         elif self.game_state.state == 'score':
+            self.streak_label.text = ""
+            self.score_streak = 0
             self.image = self.font.render("Last score: " + str(self.score), 1, (255, 255, 255))
             self.hide()
             self.show((self.background_handler.background.get_width() / 2 - self.image.get_width() / 2, 270))
@@ -62,7 +69,6 @@ class ScoreHandler(sprite.Sprite):
             self.score_streak = 0
         elif score_difference > 0:
             self.score_streak += 1
-        self.streak_label.text = f"Streak: {str(self.score_streak)}"
         self.score += score_difference
 
     def get_high_score(self):

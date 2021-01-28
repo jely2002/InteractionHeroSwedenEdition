@@ -38,6 +38,8 @@ class Label(pygame.sprite.Sprite):
                 self.show()
             else:
                 self.hide()
+        elif self.game_state.state == 'difficulty':
+            self.hide()
         elif self.game_state.state == 'score':
             if self.type == 'score':
                 self.show()

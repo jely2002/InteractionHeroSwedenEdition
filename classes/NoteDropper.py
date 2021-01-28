@@ -14,13 +14,12 @@ class NoteDropper():
             "B": [0, 0, 0, 1],
         }
 
-    
-    def drop(self, note, hitboxes):
+    def drop(self, note, hitboxes, difficulty):
         if note[0] == "PAUSE":
             return
         key = note[0][0]
         index = 0
         for drop_check in self.note_combinations[key]:
             if drop_check:
-                hitboxes[index].drop_new_note(self.music_player_ref, note)
+                hitboxes[index].drop_new_note(self.music_player_ref, note, difficulty)
             index += 1
