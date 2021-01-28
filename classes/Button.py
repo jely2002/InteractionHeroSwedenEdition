@@ -24,13 +24,13 @@ class Button(pygame.sprite.Sprite):
         dark_button = pygame.Surface((self.width, self.height), pygame.SRCALPHA, 32)
         dark_button = dark_button.convert_alpha()
         dark_button.fill(self.dark_bg_rgb)
-        dark_button.blit(self.text, (8, 8))
+        dark_button.blit(self.text, (22, -2))
         self.dark_button = dark_button
 
         light_button = pygame.Surface((self.width, self.height), pygame.SRCALPHA, 32)
         light_button = light_button.convert_alpha()
         light_button.fill(self.light_bg_rgb)
-        light_button.blit(self.text, (8, 8))
+        light_button.blit(self.text, (21, -1))
         self.light_button = light_button
 
         self.image = self.dark_button

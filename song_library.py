@@ -6,7 +6,7 @@ from classes.Song import Song
 example_song_short = Song(
     'example_notes.txt',            	# notes_filename
     180,                                # notes_bpm which decides the speed of falling notes
-    'jorvik.TTF', # font_filename in data folder
+    'opensans.ttf', # font_filename in data folder
     None,                               # bg_image_dir, the subdirectory of the data/backgrounds directory
     500,                                # bg_image_interval_ms
     'Interaktionshjälte',                 # bg_game_header
@@ -15,7 +15,7 @@ example_song_short = Song(
 du_gamla_du_fria = Song(
     'du_gamla_du_fria.txt',
     84,
-    'jorvik.TTF',
+    'opensans.ttf',
     None,
     0,
     'Interaktionshjälte'

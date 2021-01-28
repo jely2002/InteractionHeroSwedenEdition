@@ -1,5 +1,6 @@
 from pygame import sprite, font
 from utils import load_font
+from classes.Label import Label
 
 class ScoreHandler(sprite.Sprite):
     def __init__(self, allsprites, game_state, song, background_handler):
@@ -25,9 +26,13 @@ class ScoreHandler(sprite.Sprite):
         self.score_is_saved = True
 
         self.image = self.font.render('Score: ' + str(self.score), 1, (255, 255, 255))
-        self.pos = (1100, 650)  # Set the location of the text
+        self.pos = (1050, 650)  # Set the location of the text
         self.score_text = None
         self.rect = (self.pos, self.image.get_size())
+
+        self.notes_streak = 0
+        self.multiplier = 1
+        self.multiplier_label = Label(f"Multiplier: 1x", 1050, 600, False, 36, song.get_font_filename(), (255, 255, 255), "playing", allsprites, game_state)
 
     def restart(self):
         self.score = 0
@@ -54,7 +59,20 @@ class ScoreHandler(sprite.Sprite):
         return self.score_text
 
     def change_score(self, score_difference):
-        self.score += score_difference
+        if score_difference > 0:
+            self.notes_streak += 1
+        elif score_difference < 0:
+            self.notes_streak = 0
+        self.update_multiplier()
+        self.score += int(score_difference * self.multiplier)
+
+    def update_multiplier(self):
+        print(self.notes_streak)
+        if self.notes_streak % 10 == 0:
+            self.multiplier = int(self.notes_streak / 10)
+        elif self.notes_streak < 0:
+            self.multiplier = 1
+        self.multiplier_label.text = f"Multiplier: {str(self.multiplier)}x"
         
     def get_high_score(self):
         played_song = self.game_state.song.get_notes_filename()
