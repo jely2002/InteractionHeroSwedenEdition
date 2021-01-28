@@ -17,6 +17,8 @@ class MusicPlayer():
         self.countdown_label = Label("", 360, 300, True, 60, self.game_state.song.get_font_filename(), (255, 255, 255), "playing", self.game_state.allsprites, self.game_state)
 
         self.maten = {
+            "KWARTACHTSTE": 45 / self.bpm,
+            "ZESTIEN": 15 / self.bpm,
             "ACHTSTE": 30 / self.bpm,
             "KWART": 60 / self.bpm,
             "HALVE": 120 / self.bpm,
@@ -112,7 +114,8 @@ class MusicPlayer():
             "A7": 105,
             "A7#": 106,
             "B7": 107,
-            "C8": 108
+            "C8": 108,
+            "PAUSE": None
         }
 
         # Start MIDI server
@@ -172,6 +175,8 @@ class MusicPlayer():
     def play_note(self, note):
         # This check prevents double hits within 100ms
         if self.time_since_last_hit < pygame.time.get_ticks() - 100:
+            if note is None:
+                return
             self.player.note_off(self.previous_note)
             midi_note = self.noten[note[0]]
             self.player.note_on(midi_note, 127)
