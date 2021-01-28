@@ -31,13 +31,13 @@ class ScoreHandler(sprite.Sprite):
         self.score_text = None
         self.rect = (self.pos, self.image.get_size())
 
-        self.notes_streak = 0
         self.streak_label = Label(f"Streak: 0", 1050, 600, False, 36, song.get_font_filename(), (255, 255, 255),
                                   "playing", allsprites, game_state)
 
     def restart(self):
         self.score = 0
         self.score_streak = 0
+        self.score_is_saved = False
 
     # This is called every frame
     def update(self):
@@ -59,26 +59,12 @@ class ScoreHandler(sprite.Sprite):
 
     def change_score(self, score_difference):
         if (score_difference < 0):
-            self.notes_streak = 0
-<<<<<<< HEAD
-        self.update_multiplier()
-        self.score += int(score_difference * self.multiplier)
-
-    def update_multiplier(self):
-        print(self.notes_streak)
-        if self.notes_streak % 10 == 0 and self.notes_streak / 10 != 0:
-            self.multiplier = int(self.notes_streak / 10)
-        elif self.notes_streak < 0:
-            self.multiplier = 1
-        self.multiplier_label.text = f"Multiplier: {str(self.multiplier)}x"
-        
-=======
+            self.score_streak = 0
         elif score_difference > 0:
-            self.notes_streak += 1
-        self.streak_label.text = f"Streak: {str(self.notes_streak)}"
+            self.score_streak += 1
+        self.streak_label.text = f"Streak: {str(self.score_streak)}"
         self.score += score_difference
 
->>>>>>> master
     def get_high_score(self):
         played_song = self.game_state.song.get_notes_filename()
         best_score = None
@@ -90,6 +76,7 @@ class ScoreHandler(sprite.Sprite):
                 songscore = int(songdata[1])
                 if songname == played_song and (best_score == None or songscore > best_score):
                     best_score = songscore
+
         return str(best_score)
 
     def get_last_score(self):
