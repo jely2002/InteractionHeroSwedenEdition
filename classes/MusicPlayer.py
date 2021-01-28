@@ -120,25 +120,25 @@ class MusicPlayer():
         }
 
         # Start MIDI server
-        if utils.is_running_on_rpi():
-            self.start_midi_server()
+        #if utils.is_running_on_rpi():
+        #    self.start_midi_server()
 
         # Pygame MIDI init
-        pygame.midi.init()
+        #pygame.midi.init()
 
-        default_output_id = pygame.midi.get_default_output_id()
-        if default_output_id != -1:
-            if utils.is_running_on_rpi():
-                # Setting output on 2 on RPi is required for using Timidity
-                self.player = pygame.midi.Output(2)
-            else:
-                self.player = pygame.midi.Output(default_output_id)
-        else:
-            print('No audio devices found! Closing program...')
-            quit()
+        #default_output_id = pygame.midi.get_default_output_id()
+        #if default_output_id != -1:
+        #    if utils.is_running_on_rpi():
+        #        # Setting output on 2 on RPi is required for using Timidity
+        #        self.player = pygame.midi.Output(2)
+        #    else:
+        #        self.player = pygame.midi.Output(default_output_id)
+        #else:
+        #    print('No audio devices found! Closing program...')
+        #    quit()
 
         # Change this in case you want hit notes to make different sounds
-        self.player.set_instrument(2)
+        #self.player.set_instrument(2)
 
         # Load all the notes from the notes file
         self.liedje = self._read_file(song.get_notes_filename())

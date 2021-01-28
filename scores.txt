@@ -1,1 +1,3 @@
 du_gamla_du_fria.txt 920
+du_gamla_du_fria.txt 150
+du_gamla_du_fria.txt 955
