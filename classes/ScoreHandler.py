@@ -68,7 +68,7 @@ class ScoreHandler(sprite.Sprite):
 
     def update_multiplier(self):
         print(self.notes_streak)
-        if self.notes_streak % 10 == 0:
+        if self.notes_streak % 10 == 0 and self.notes_streak / 10 != 0:
             self.multiplier = int(self.notes_streak / 10)
         elif self.notes_streak < 0:
             self.multiplier = 1
