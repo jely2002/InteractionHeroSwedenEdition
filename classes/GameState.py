@@ -1,5 +1,4 @@
 from utils import load_sound, load_font
-from classes.GpioButton import GpioButton
 from classes.Hitbox import Hitbox
 from classes.ScoreHandler import ScoreHandler
 from classes.BackgroundHandler import BackgroundHandler

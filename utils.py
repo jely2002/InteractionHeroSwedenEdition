@@ -10,7 +10,7 @@ def load_image(name, colorkey=None):
     except pygame.error:
         print("Cannot load image:", fullname)
         raise SystemExit(str(geterror()))
-    image = image.convert()
+    image = image.convert_alpha()
     if colorkey is not None:
         if colorkey == -1:
             colorkey = image.get_at((0, 0))
