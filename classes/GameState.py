@@ -35,6 +35,10 @@ class GameState():
 
         self.buzzer = None
 
+        if pi:
+            from gpiozero import Buzzer
+            self.buzzer = Buzzer(21, active_high=False)
+
         # Responsible for managing (high) scores
         self.scoreHandler = ScoreHandler(self.allsprites, self, self.song, self.background_handler)
 
@@ -107,8 +111,6 @@ class GameState():
 
     def buzz(self):
         if self.pi:
-            from gpiozero import Buzzer
-            self.buzzer = Buzzer(21, active_high=False)
             self.buzzer.beep()
         else:
             self.sounds_miss.play()
