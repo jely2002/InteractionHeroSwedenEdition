@@ -2,6 +2,7 @@ from pygame import sprite, font
 from utils import load_font
 from classes.Label import Label
 
+
 class ScoreHandler(sprite.Sprite):
     def __init__(self, allsprites, game_state, song, background_handler):
         sprite.Sprite.__init__(self, allsprites)
@@ -31,14 +32,12 @@ class ScoreHandler(sprite.Sprite):
         self.rect = (self.pos, self.image.get_size())
 
         self.notes_streak = 0
-        self.multiplier = 1
-        self.multiplier_label = Label(f"Multiplier: 1x", 1050, 600, False, 36, song.get_font_filename(), (255, 255, 255), "playing", allsprites, game_state)
+        self.streak_label = Label(f"Streak: 0", 1050, 600, False, 36, song.get_font_filename(), (255, 255, 255),
+                                  "playing", allsprites, game_state)
 
     def restart(self):
         self.score = 0
         self.score_streak = 0
-        self.score_multiplier = 1
-        self.score_is_saved = False
 
     # This is called every frame
     def update(self):
@@ -59,10 +58,9 @@ class ScoreHandler(sprite.Sprite):
         return self.score_text
 
     def change_score(self, score_difference):
-        if score_difference > 0:
-            self.notes_streak += 1
-        elif score_difference < 0:
+        if (score_difference < 0):
             self.notes_streak = 0
+<<<<<<< HEAD
         self.update_multiplier()
         self.score += int(score_difference * self.multiplier)
 
@@ -74,6 +72,13 @@ class ScoreHandler(sprite.Sprite):
             self.multiplier = 1
         self.multiplier_label.text = f"Multiplier: {str(self.multiplier)}x"
         
+=======
+        elif score_difference > 0:
+            self.notes_streak += 1
+        self.streak_label.text = f"Streak: {str(self.notes_streak)}"
+        self.score += score_difference
+
+>>>>>>> master
     def get_high_score(self):
         played_song = self.game_state.song.get_notes_filename()
         best_score = None
