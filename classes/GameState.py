@@ -108,7 +108,7 @@ class GameState():
     def buzz(self):
         if self.pi:
             from gpiozero import Buzzer
-            self.buzzer = Buzzer(21)
+            self.buzzer = Buzzer(21, active_high=False)
             self.buzzer.beep()
         else:
             self.sounds_miss.play()
