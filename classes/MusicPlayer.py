@@ -5,6 +5,7 @@ import os
 import math
 import datetime
 from classes.Label import Label
+from classes.RemoteSound import RemoteSound
 
 
 class MusicPlayer():
@@ -154,6 +155,7 @@ class MusicPlayer():
         self.start_time = None
         self.first_run = True
         self.song_done = False
+        self.remote_sound = RemoteSound("192.168.1.76", "8765")
 
         # Set the next start a few moments later so the notes can drop
         self.initial_delay_ms = 3000
@@ -177,9 +179,10 @@ class MusicPlayer():
         if self.time_since_last_hit < pygame.time.get_ticks() - 100:
             if note is None:
                 return
-            self.player.note_off(self.previous_note)
+            #self.player.note_off(self.previous_note)
             midi_note = self.noten[note[0]]
-            self.player.note_on(midi_note, 127)
+            self.remote_sound.send_note([self.previous_note, midi_note])
+            #self.player.note_on(midi_note, 127)
             self.previous_note = midi_note
             self.time_since_last_hit = pygame.time.get_ticks()
 
