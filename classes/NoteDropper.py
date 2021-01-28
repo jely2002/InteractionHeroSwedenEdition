@@ -16,6 +16,8 @@ class NoteDropper():
 
     
     def drop(self, note, hitboxes):
+        if note[0] == "PAUSE":
+            return
         key = note[0][0]
         index = 0
         for drop_check in self.note_combinations[key]:
