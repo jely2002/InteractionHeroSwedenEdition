@@ -39,7 +39,11 @@ class TouchButtons:
         return button_number in pins
 
     def get_val(self):
-        val = self.bus.read_byte(self.addr)
+        val = 0
+        try:
+            val = self.bus.read_byte(self.addr)
+        except:
+            pass
         return val
 
     def get_pin(self, val):
